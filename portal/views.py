@@ -31,12 +31,13 @@ def delete_note(request, pk=None):
     note.delete()
     return redirect("notes")
 
-# class notes_detail(generic.DetailView):
-    # model = Notes
 
 def NotesDetailView(request,pk=None):
-    return render(request, 'dashboard/notes_detail.html')
-
+    note = Notes.objects.get(id=pk)
+    context = {
+        'note':note,
+    }
+    return render(request, 'dashboard/notes_detail.html',context)
 
 def homework(request):
     if request.method == 'POST':
