@@ -133,7 +133,7 @@ def todo(request):
             todolist.save();
     else:
         form = TodoForm()
-    to_do = Todo.objects.filter(user = request.user)
+    to_do = Todo.objects.all()
     context = {'form':form,'to_do':to_do}
     return render(request, 'dashboard/todo.html',context)
 
