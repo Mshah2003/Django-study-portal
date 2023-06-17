@@ -22,7 +22,7 @@ def notes(request):
         messages.success(request,f"Notes added from {request.user.username} successfully")
     else:
         form = NotesForm()
-    notes = Notes.objects.filter(user=request.user) # request.user means login user
+    notes = Notes.objects.all()
     context = {'notes':notes, 'form':form}
     return render(request, 'dashboard/notes.html',context)
 
@@ -55,7 +55,7 @@ def homework(request):
             hw.save();
     else:
         form = HomeworkForm()
-    hw = Homework.objects.filter(user=request.user)
+    hw = Homework.objects.all()
     if len(hw) == 0:
         homework_done = True
     else:
