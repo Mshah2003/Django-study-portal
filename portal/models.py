@@ -4,7 +4,7 @@ from django.utils import timezone
 
 # Create your models here.
 class Notes(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
 
@@ -17,7 +17,7 @@ class Notes(models.Model):
 
 
 class Homework(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     title = models.CharField(max_length=500)
     description = models.TextField()
@@ -29,7 +29,7 @@ class Homework(models.Model):
 
 
 class Todo(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    # user = models.ForeignKey(User, on_delete = models.CASCADE)
     title = models.CharField(max_length=100)
     is_finished = models.BooleanField(default=False)
 

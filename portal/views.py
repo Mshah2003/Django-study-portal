@@ -7,6 +7,7 @@ from .models import Notes,Homework
 from youtubesearchpython import VideosSearch
 import requests 
 import wikipediaapi
+from django.core.cache import cache
 
 # Create your views here.
 def home(request):
@@ -17,7 +18,7 @@ def notes(request):
 
         form = NotesForm(request.POST)
         if form.is_valid():
-            notes = Notes(user=request.user,title=request.POST['title'],description=request.POST['description'])
+            notes = Notes(title=request.POST['title'],description=request.POST['description'])
             notes.save();
         messages.success(request,f"Notes added from {request.user.username} successfully")
     else:
@@ -31,13 +32,22 @@ def delete_note(request, pk=None):
     note.delete()
     return redirect("notes")
 
-
 def NotesDetailView(request,pk=None):
-    note = Notes.objects.get(id=pk)
+    if cache.get(pk):
+        note = cache.get(pk)
+        print('redis')
+    else:
+        try:
+            note = Notes.objects.get(id=pk)
+            cache.set(pk,note)
+            print('DB data')
+        except Notes.DoesNotExist:
+            return redirect('/')
     context = {
         'note':note,
     }
     return render(request, 'dashboard/notes_detail.html',context)
+
 
 def homework(request):
     if request.method == 'POST':
@@ -129,7 +139,7 @@ def todo(request):
                     finished = False
             except:
                 finished = False
-            todolist = Todo(user = request.user,title = request.POST['title'],is_finished=finished)
+            todolist = Todo(title = request.POST['title'],is_finished=finished)
             todolist.save();
     else:
         form = TodoForm()
@@ -170,7 +180,7 @@ def books(request):
                 'count':answer['items'][i]['volumeInfo'].get('pageCount'),
                 'categories':answer['items'][i]['volumeInfo'].get('categories'),
                 'rating':answer['items'][i]['volumeInfo'].get('pageRating'),
-                'thumbnail':answer['items'][i]['volumeInfo'].get('imageLinks').get('thumbnail'),
+                'thumbnail':answer['items'][i]['volumeInfo'].get('thumbnail'),
                 'preview':answer['items'][i]['volumeInfo'].get('previewLink'),
             }
             result_list.append(result_dict)
@@ -226,7 +236,7 @@ def dictionary(request):
 def wikipedia(request):
     if request.method == 'POST':
         form = DashboardForm(request.POST)
-        input = request.POST.get('text')
+        input = request.POST['text']
         wiki_wiki = wikipediaapi.Wikipedia('en')
         page = wiki_wiki.page(input)
         

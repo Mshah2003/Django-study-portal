@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'portal',
-    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -102,6 +101,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -129,4 +137,3 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[BASE_DIR/"static"]
 
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
